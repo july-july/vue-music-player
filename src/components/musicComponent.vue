@@ -24,10 +24,10 @@
           </div>
         </div>
         <div class="control">
-          <button @click="previous" :disabled="currentPlay === 0"><i class="fa fa-backward"></i></button>
+          <button @click="previous" :disabled="currentPlay === 0" :class="{disabled: disable === true}"><i class="fa fa-backward"></i></button>
           <button v-show="!sound" @click="play(0)"><i class="fa fa-play"></i></button>
           <button v-show="sound" @click="pause"><i class="fa fa-pause"></i></button>
-          <button @click="next"><i class="fa fa-forward"></i></button>
+          <button @click="next" :class="{'disabled': disable === true}"><i class="fa fa-forward"></i></button>
         </div>
         <div class="options">
           <button type="button" :class="{active: repeatAll}" @click="repeatAll= !repeatAll"><img
@@ -44,7 +44,11 @@
 </template>
 <style>
   @import url('https://fonts.googleapis.com/css?family=Roboto');
-
+  .disabled {
+    user-select: none;
+    pointer-events: none;
+    opacity: 0.5;
+  }
   * {
     transition: all .8s ease-in-out;
   }
@@ -397,7 +401,8 @@
           },
         ],
         sound: false,
-        currentPlay: 3
+        currentPlay: 3,
+        disable: false
 
       }
     },
@@ -425,12 +430,10 @@
             this.next();
           }
           if(this.startTime === this.tracks[this.currentPlay].duration && this.repeatOne === true){
-            // window.clearInterval(time)
             this.startTime= 0;
             this.player.seekTo(0,true);
 
           }
-
           if (this.startTime === this.tracks[this.currentPlay].duration || this.sound === false) {
             window.clearInterval(time)
             console.log('stop')
@@ -441,11 +444,12 @@
       previous() {
         this.currentPlay--;
         this.sound = false;
+        this.disable=true
         this.timer()
         setTimeout(() => {
           this.startTime = 0
           this.play();
-
+          this.disable=false
         }, 1000)
       },
       next() {
@@ -459,12 +463,14 @@
           }
           else{
             this.currentPlay++;
+            this.disable=true
           }
         }
         this.sound = false;
         this.timer();
+        this.startTime = 0;
         setTimeout(() => {
-          this.startTime = 0;
+          this.disable=false
           this.play()
         }, 1000)
       },
