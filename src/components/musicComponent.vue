@@ -4,7 +4,8 @@
       <div class="back-player" :style="{backgroundImage:  'url('+ tracks[currentPlay].album.image + ')'}">
       </div>
       <div class="body-player">
-        <p><img :src="tracks[currentPlay].album.image" alt="" style="box-shadow: 1px 3px 4px 1px #00000087;"></p>
+        <p><img :src="tracks[currentPlay].album.image" alt="" class="music-img"
+                style="box-shadow: 1px 3px 4px 1px #00000087;"></p>
         <p class="name">{{tracks[currentPlay].name}}</p>
         <p class="artist">{{tracks[currentPlay].artist}}</p>
         <div id="timeline">
@@ -24,18 +25,19 @@
           </div>
         </div>
         <div class="control">
-          <button @click="previous" :disabled="currentPlay === 0" :class="{disabled: disable === true}"><i class="fa fa-backward"></i></button>
+          <button @click="previous" :class="{disabled: disable === true}"><i
+            class="fa fa-backward"></i></button>
           <button v-show="!sound" @click="play(0)"><i class="fa fa-play"></i></button>
           <button v-show="sound" @click="pause"><i class="fa fa-pause"></i></button>
           <button @click="next" :class="{'disabled': disable === true}"><i class="fa fa-forward"></i></button>
         </div>
         <div class="options">
-          <button type="button" :class="{active: repeatAll}" @click="repeatAll= !repeatAll"><img
-            src="https://music.yandex.ru/i/4R0VzZL0pY_3om_7d20vPfnoGsw.svg" alt=""></button>
           <button :class="{active: repeatOne}" @click="repeatOne= !repeatOne"><img
             src="https://music.yandex.ru/i/DzKyWD6KqIX8_M1MQHEp8piq-s.svg" alt=""></button>
-          <button :class="{active: mixAll}"><img src="https://music.yandex.ru/i/f_ASOJaXjrN-HNGmz95LN4221Zw.svg" alt="">
-          </button>
+          <span class="volume" style="color: white">
+            <i class="fa fa-volume-up"></i>
+          </span>
+          <input type="range" class="volume-range"  v-model="volume"  min="1" max="100" step="1"/>
         </div>
       </div>
       <youtube style="display: none" ref="youtube" :video-id="tracks[currentPlay].youtubeId"></youtube>
@@ -44,17 +46,31 @@
 </template>
 <style>
   @import url('https://fonts.googleapis.com/css?family=Roboto');
+  .volume-range{
+    display: none;
+  }
+  .volume:hover + input.volume-range,input.volume-range:hover  {
+    display: inline;
+  }
+  .music-img {
+    width: 200px;
+    height: 200px;
+  }
+
   .disabled {
     user-select: none;
     pointer-events: none;
     opacity: 0.5;
   }
+
   * {
     transition: all .8s ease-in-out;
   }
+
   .progress {
     transition: width 0.4s linear;
   }
+
   p {
     margin: 10px;
   }
@@ -247,13 +263,18 @@
         return this.$refs.youtube.player
       }
     },
+    watch: {
+      volume: function () {
+        this.player.setVolume(this.volume)
+      }
+    },
     data() {
       return {
         startTime: 0,
-        music: [],
-        repeatAll: false,
+        // music: [],
+        // repeatAll: false,
         repeatOne: false,
-        mixAll: false,
+
         tracks: [
           {
             id: 0,
@@ -399,11 +420,28 @@
             year: "2018"
 
           },
+          {
+            id: 9,
+            name: "Purple Shades",
+            artist: 'NBSPLV',
+            album:
+              {
+                title: 'Silver Tape',
+                image: "https://avatars.yandex.net/get-music-content/98892/a6f02432.a.4881522-1/400x400",
+              }
+            ,
+            youtubeId: "qWlkjb0Lm3Q",
+            duration: 210,
+            rating: "",
+            year: "2017"
+
+          },
         ],
         sound: false,
-        currentPlay: 3,
-        disable: false
-
+        currentPlay: 9,
+        disable: false,
+        time: "",
+        volume: 30
       }
     },
     methods: {
@@ -418,59 +456,55 @@
         this.timer()
       },
       timer() {
-        let time = setInterval(() => {
-          if(this.currentPlay === this.tracks.length){
-            this.pause()
-            window.clearInterval(time)
-            this.startTime=0
-
-          }
+        this.time = setInterval(() => {
           this.startTime++
           if (this.startTime === this.tracks[this.currentPlay].duration && this.repeatOne !== true) {
             this.next();
           }
-          if(this.startTime === this.tracks[this.currentPlay].duration && this.repeatOne === true){
-            this.startTime= 0;
-            this.player.seekTo(0,true);
+          if (this.startTime === this.tracks[this.currentPlay].duration && this.repeatOne === true) {
+            this.startTime = 0;
+            this.player.seekTo(0, true);
 
           }
           if (this.startTime === this.tracks[this.currentPlay].duration || this.sound === false) {
-            window.clearInterval(time)
+            window.clearInterval(this.time)
             console.log('stop')
           }
         }, 1000);
 
       },
       previous() {
-        this.currentPlay--;
+        if (this.currentPlay === 0) {
+          this.currentPlay = this.tracks.length - 1
+        }
+        else {
+          this.currentPlay--;
+        }
         this.sound = false;
-        this.disable=true
-        this.timer()
+        this.disable = true
+        window.clearInterval(this.time)
         setTimeout(() => {
           this.startTime = 0
           this.play();
-          this.disable=false
+          this.disable = false
         }, 1000)
       },
       next() {
-        if(this.mixAll === true) {
-          // this.currentPlay ===
+        if(this.currentPlay === this.tracks.length - 1){
+          this.currentPlay = 0
+          window.clearInterval(this.time)
         }
-        else{
-          console.log(this.tracks.length-1, this.currentPlay);
-          if(this.currentPlay === this.tracks.length-1 && this.repeatAll === true)  {
-            this.currentPlay = 0
-          }
-          else{
+        else {
+          console.log(this.tracks.length - 1, this.currentPlay);
             this.currentPlay++;
-            this.disable=true
-          }
+            window.clearInterval(this.time)
+            this.disable = true
         }
         this.sound = false;
         this.timer();
         this.startTime = 0;
         setTimeout(() => {
-          this.disable=false
+          this.disable = false
           this.play()
         }, 1000)
       },
