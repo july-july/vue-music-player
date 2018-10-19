@@ -4,6 +4,12 @@
       <div class="back-player" :style="{backgroundImage:  'url('+ tracks[currentPlay].album.image + ')'}">
       </div>
       <div class="body-player">
+        <a href="" class="playlist"><i class="fa fa-bars"></i></a>
+        <span class="volume" style="color: white">
+            <i class="fa fa-volume-up"></i>
+          <input type="range" class="volume-range" v-model="volume" min="0" max="100" step="1"/>
+          <i class="fa fa-volume-off" @click="mute"></i>
+          </span>
         <p><img :src="tracks[currentPlay].album.image" alt="" class="music-img"
                 style="box-shadow: 1px 3px 4px 1px #00000087;"></p>
         <p class="name">{{tracks[currentPlay].name}}</p>
@@ -34,10 +40,7 @@
         <div class="options">
           <button :class="{active: repeatOne}" @click="repeatOne= !repeatOne"><img
             src="https://music.yandex.ru/i/DzKyWD6KqIX8_M1MQHEp8piq-s.svg" alt=""></button>
-          <span class="volume" style="color: white">
-            <i class="fa fa-volume-up"></i>
-          </span>
-          <input type="range" class="volume-range"  v-model="volume"  min="1" max="100" step="1"/>
+          <button type="button" @click="like" v-show=""><i class="fa fa-heart-o"></i></button>
         </div>
       </div>
       <youtube style="display: none" ref="youtube" :video-id="tracks[currentPlay].youtubeId"></youtube>
@@ -46,12 +49,83 @@
 </template>
 <style>
   @import url('https://fonts.googleapis.com/css?family=Roboto');
-  .volume-range{
-    display: none;
+
+  .playlist {
+    position: absolute;
+    z-index: 1111;
+    top: 35px;
+    color: white;
+    left: 0;
   }
-  .volume:hover + input.volume-range,input.volume-range:hover  {
-    display: inline;
+
+  .heart {
+    color: #ff0000a1;
   }
+
+  input[type=range] {
+    -webkit-appearance: none;
+    width: 0;
+    opacity: 0;
+  }
+
+  .volume .fa.fa-volume-off {
+    opacity: 0;
+  }
+
+  input[type=range]:focus {
+    outline: none;
+  }
+
+  input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 2px;
+    cursor: pointer;
+    animate: 0.2s;
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+    background: #808080;
+    border-radius: 1.3px;
+    border: 0.2px solid #010101;
+  }
+
+  input[type=range]::-webkit-slider-thumb {
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+    border: 1px solid #000000;
+    height: 8px;
+    width: 8px;
+    border-radius: 50%;
+    background: #ffffff;
+    cursor: pointer;
+    -webkit-appearance: none;
+    margin-top: -4px;
+  }
+
+  input[type=range]:focus::-webkit-slider-runnable-track {
+    background: #808080;
+  }
+
+  .volume {
+    position: absolute;
+    top: 35px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    right: 0;
+    flex-direction: row-reverse;
+    transition: width .5s linear;
+  }
+
+  .volume:hover input {
+    width: 70px;
+    opacity: 1;
+  }
+
+  .volume:hover .fa.fa-volume-off {
+    opacity: 1;
+  }
+
+  /*.volume:hover  input.volume-range,input.volume-range:hover  {*/
+  /*display: block;*/
+  /*}*/
   .music-img {
     width: 200px;
     height: 200px;
@@ -101,6 +175,9 @@
 
   .options {
     padding-top: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .options .active {
@@ -125,6 +202,8 @@
     width: 32px;
     height: 30px;
     text-align: center;
+    display: flex;
+    margin: 0 11px;
   }
 
   .control button {
@@ -253,10 +332,11 @@
 <script>
   import axios from 'axios'
   import VueYoutube from 'vue-youtube'
+  import music from '../api/data'
 
   export default {
     components: {
-      axios, VueYoutube
+      axios, VueYoutube, music
     },
     computed: {
       player() {
@@ -271,181 +351,26 @@
     data() {
       return {
         startTime: 0,
-        // music: [],
-        // repeatAll: false,
         repeatOne: false,
-
-        tracks: [
-          {
-            id: 0,
-            name: "Nicotine",
-            artist: 'Panic! at the disco',
-            album:
-              {
-                title: 'Too Weird to Live, Too Rare to Die!',
-                image: "https://avatars.yandex.net/get-music-content/34131/7f53bab3.a.1593740-1/200x200",
-              }
-            ,
-            youtubeId: "LkBxcmxWKAA",
-            duration: 197,
-            rating: "",
-            year: "2013"
-
-          },
-          {
-            id: 1,
-            name: "Death of a Bachelor",
-            artist: 'Panic! at the disco',
-            album:
-              {
-                title: 'Death of a Bachelor',
-                image: "https://avatars.yandex.net/get-music-content/34131/70947499.a.3179720-1/200x200",
-              }
-            ,
-            youtubeId: "R03cqGg40GU",
-            duration: 212,
-            rating: "",
-            year: "2015"
-
-          },
-          {
-            id: 2,
-            name: "Emperor's New Clothes",
-            artist: 'Panic! at the disco',
-            album:
-              {
-                title: 'Death of a Bachelor',
-                image: "https://avatars.yandex.net/get-music-content/34131/70947499.a.3179720-1/200x200",
-              }
-            ,
-            youtubeId: "7qFF2v8VsaA",
-            duration: 219,
-            rating: "",
-            year: "2015"
-
-          },
-          {
-            id: 3,
-            name: "LA Devotee",
-            artist: 'Panic! at the disco',
-            album:
-              {
-                title: 'Death of a Bachelor',
-                image: "https://avatars.yandex.net/get-music-content/34131/70947499.a.3179720-1/200x200",
-              }
-            ,
-            youtubeId: "r5dNcKTcnPA",
-            duration: 245,
-            rating: "",
-            year: "2015"
-
-          },
-          {
-            id: 4,
-            name: "Waiting So Long",
-            artist: 'NBSPLV',
-            album:
-              {
-                title: 'Black Tape',
-                image: "https://avatars.yandex.net/get-music-content/119639/31cd079e.a.4881523-1/200x200",
-              }
-            ,
-            youtubeId: "Tgg7LNso_rs",
-            duration: 198,
-            rating: "",
-            year: "2017"
-
-          },
-          {
-            id: 5,
-            name: "High Hopes",
-            artist: 'Panic! At The Disco',
-            album:
-              {
-                title: 'Pray For A Wiked',
-                image: "https://avatars.yandex.net/get-music-content/139444/67ca7282.a.5489472-1/200x200",
-              }
-            ,
-            youtubeId: "IPXIgEAGe4U",
-            duration: 197,
-            rating: "",
-            year: "2018"
-
-          },
-          {
-            id: 6,
-            name: "Nothing Will Be Bigger Than Us",
-            artist: 'Hurts',
-            album:
-              {
-                title: 'Surrender',
-                image: "https://avatars.yandex.net/get-music-content/63210/5d49936a.a.2990574-1/200x200",
-              }
-            ,
-            youtubeId: "6_eVOzxZrdE",
-            duration: 243,
-            rating: "",
-            year: "2018"
-
-          },
-          {
-            id: 7,
-            name: "Weeds",
-            artist: 'Marina And The Diamonds',
-            album:
-              {
-                title: 'Froot',
-                image: "https://avatars.yandex.net/get-music-content/38044/db75aa5e.a.2579105-1/200x200",
-              }
-            ,
-            youtubeId: "ZlE2WQCGGZo",
-            duration: 248,
-            rating: "",
-            year: "2015"
-
-          },
-          {
-            id: 8,
-            name: "Nico and the Niners",
-            artist: 'Twenty One Pilots',
-            album:
-              {
-                title: 'Froot',
-                image: "https://avatars.yandex.net/get-music-content/176019/68569b6f.a.5838243-1/200x200",
-              }
-            ,
-            youtubeId: "hMAPyGoqQVw",
-            duration: 263,
-            rating: "",
-            year: "2018"
-
-          },
-          {
-            id: 9,
-            name: "Purple Shades",
-            artist: 'NBSPLV',
-            album:
-              {
-                title: 'Silver Tape',
-                image: "https://avatars.yandex.net/get-music-content/98892/a6f02432.a.4881522-1/400x400",
-              }
-            ,
-            youtubeId: "qWlkjb0Lm3Q",
-            duration: 210,
-            rating: "",
-            year: "2017"
-
-          },
-        ],
+        tracks: music,
         sound: false,
         currentPlay: 9,
         disable: false,
         time: "",
-        volume: 30
+        volume: 50,
+        favourites: []
       }
     },
     methods: {
-      async pause() {
+      mute() {
+        if (this.volume === 0) {
+          this.volume = 50
+        }
+        else {
+          this.volume = 0
+        }
+      },
+      pause() {
         this.sound = false;
         this.player.pauseVideo()
 
@@ -490,15 +415,15 @@
         }, 1000)
       },
       next() {
-        if(this.currentPlay === this.tracks.length - 1){
+        if (this.currentPlay === this.tracks.length - 1) {
           this.currentPlay = 0
           window.clearInterval(this.time)
         }
         else {
           console.log(this.tracks.length - 1, this.currentPlay);
-            this.currentPlay++;
-            window.clearInterval(this.time)
-            this.disable = true
+          this.currentPlay++;
+          window.clearInterval(this.time)
+          this.disable = true
         }
         this.sound = false;
         this.timer();
@@ -508,6 +433,15 @@
           this.play()
         }, 1000)
       },
+      like() {
+        this.favourites.push(
+          this.tracks[this.currentPlay]
+        )
+        const parseFav = JSON.stringify(this.favourites);
+        localStorage.setItem('fav', parseFav)
+        // this.favourites = localStorage.fav
+        console.log(this.favourites)
+      }
     },
   }
 </script>
