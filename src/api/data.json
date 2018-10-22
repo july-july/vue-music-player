@@ -1,6 +1,6 @@
 [
   {
-    "id": "0",
+    "id": 0,
     "name": "Nicotine",
     "artist": "Panic! at the disco",
     "album": {
@@ -10,10 +10,11 @@
     "youtubeId": "LkBxcmxWKAA",
     "duration": "197",
     "rating": "",
-    "year": "2013"
+    "year": "2013",
+    "favourite": false
   },
   {
-    "id": "1",
+    "id": 1,
     "name": "Death of a Bachelor",
     "artist": "Panic! at the disco",
     "album": {
@@ -23,7 +24,8 @@
     "youtubeId": "R03cqGg40GU",
     "duration": 212,
     "rating": "",
-    "year": "2015"
+    "year": "2015",
+    "favourite": false
   },
   {
     "id": 2,
@@ -36,7 +38,8 @@
     "youtubeId": "7qFF2v8VsaA",
     "duration": 219,
     "rating": "",
-    "year": "2015"
+    "year": "2015",
+    "favourite": false
   },
   {
     "id": 3,
@@ -49,7 +52,8 @@
     "youtubeId": "r5dNcKTcnPA",
     "duration": 245,
     "rating": "",
-    "year": "2015"
+    "year": "2015",
+    "favourite": false
   },
   {
     "id": 4,
@@ -62,7 +66,8 @@
     "youtubeId": "Tgg7LNso_rs",
     "duration": 198,
     "rating": "",
-    "year": "2017"
+    "year": "2017",
+    "favourite": false
   },
   {
     "id": 5,
@@ -75,7 +80,8 @@
     "youtubeId": "IPXIgEAGe4U",
     "duration": 197,
     "rating": "",
-    "year": "2018"
+    "year": "2018",
+    "favourite": false
   },
   {
     "id": 6,
@@ -88,7 +94,8 @@
     "youtubeId": "6_eVOzxZrdE",
     "duration": 243,
     "rating": "",
-    "year": "2018"
+    "year": "2018",
+    "favourite": false
   },
   {
     "id": 7,
@@ -101,7 +108,8 @@
     "youtubeId": "ZlE2WQCGGZo",
     "duration": 248,
     "rating": "",
-    "year": "2015"
+    "year": "2015",
+    "favourite": false
   },
   {
     "id": 8,
@@ -114,7 +122,8 @@
     "youtubeId": "hMAPyGoqQVw",
     "duration": 263,
     "rating": "",
-    "year": "2018"
+    "year": "2018",
+    "favourite": false
   },
   {
     "id": 9,
@@ -127,7 +136,78 @@
     "youtubeId": "qWlkjb0Lm3Q",
     "duration": 210,
     "rating": "",
-    "year": "2017"
+    "year": "2017",
+    "favourite": false
+  },
+  {
+    "id": 10,
+    "name": "1999",
+    "artist": "Charli XCX & Troye Sivan - 1999",
+    "album": {
+      "title": "1999",
+      "image": "https://avatars.yandex.net/get-music-content/139444/3ee68278.a.5831630-1/200x200"
+    },
+    "youtubeId": "YRkB8FlkmVM",
+    "duration": 189,
+    "rating": "",
+    "year": "2018",
+    "favourite": false
+  },
+  {
+    "id": 11,
+    "name": "This is Gospel",
+    "artist": "Panic! at the disco",
+    "album": {
+      "title": "Too Weird to Live, Too Rare to Die!",
+      "image": "https://avatars.yandex.net/get-music-content/34131/7f53bab3.a.1593740-1/200x200"
+    },
+    "youtubeId": "tGE381tbQa8",
+    "duration": 191,
+    "rating": "",
+    "year": "2013",
+    "favourite": false
+  },
+  {
+    "id": 12,
+    "name": "Oh no!",
+    "artist": "Marina and the diamonds",
+    "album": {
+      "title": "The Family Jewels",
+      "image": "https://avatars.yandex.net/get-music-content/32236/92135a05.a.57832-1/200x200"
+    },
+    "youtubeId": "Cr-SqRWImmI",
+    "duration": 190,
+    "rating": "",
+    "year": "2010",
+    "favourite": false
+  },
+  {
+    "id": 13,
+    "name": "Chasing kites",
+    "artist": "iamamiwhoami",
+    "album": {
+      "title": "Chasing kites",
+      "image": "https://t2.genius.com/unsafe/220x220/https%3A%2F%2Fimages.genius.com%2F6ada3e062a380cb33811af585906ff50.1000x1000x1.jpg"
+    },
+    "youtubeId": "ETCnS4Lj9Y4",
+    "duration": 339,
+    "rating": "",
+    "year": "2017",
+    "favourite": false
+  },
+  {
+    "id": 14,
+    "name": "Wonderful life",
+    "artist": "Hurts",
+    "album": {
+      "title": "Belle vue EP",
+      "image": "https://avatars.yandex.net/get-music-content/33216/af12e218.a.85253-1/200x200"
+    },
+    "youtubeId": "1TB1x67Do5U",
+    "duration": 210,
+    "rating": "",
+    "year": "2009",
+    "favourite": false
   }
 ]
 

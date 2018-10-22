@@ -3,13 +3,13 @@
     <div class="player-container">
       <div class="back-player" :style="{backgroundImage:  'url('+ tracks[currentPlay].album.image + ')'}">
       </div>
+      <button @click="playlist = !playlist" type="button" class="playlist"><i class="fa fa-bars"></i></button>
       <div class="body-player">
-        <a href="" class="playlist"><i class="fa fa-bars"></i></a>
         <span class="volume" style="color: white">
             <i class="fa fa-volume-up"></i>
           <input type="range" class="volume-range" v-model="volume" min="0" max="100" step="1"/>
           <i class="fa fa-volume-off" @click="mute"></i>
-          </span>
+        </span>
         <p><img :src="tracks[currentPlay].album.image" alt="" class="music-img"
                 style="box-shadow: 1px 3px 4px 1px #00000087;"></p>
         <p class="name">{{tracks[currentPlay].name}}</p>
@@ -33,7 +33,7 @@
         <div class="control">
           <button @click="previous" :class="{disabled: disable === true}"><i
             class="fa fa-backward"></i></button>
-          <button v-show="!sound" @click="play(0)"><i class="fa fa-play"></i></button>
+          <button v-show="!sound" @click="play"><i class="fa fa-play"></i></button>
           <button v-show="sound" @click="pause"><i class="fa fa-pause"></i></button>
           <button @click="next" :class="{'disabled': disable === true}"><i class="fa fa-forward"></i></button>
         </div>
@@ -43,19 +43,33 @@
           <button type="button" @click="like" v-show=""><i class="fa fa-heart-o"></i></button>
         </div>
       </div>
-      <youtube style="display: none" ref="youtube" :video-id="tracks[currentPlay].youtubeId"></youtube>
+      <user-playlist
+        :class="{playlist_active : playlist===true}"
+        :tracks="tracks"
+        @current-play="changeCurrentPlay"
+        @play="play"
+        :sound="sound"
+      ></user-playlist>
     </div>
+    <youtube style="display: none" ref="youtube" :video-id="tracks[currentPlay].youtubeId"></youtube>
   </div>
 </template>
 <style>
   @import url('https://fonts.googleapis.com/css?family=Roboto');
+  @import url('https://fonts.googleapis.com/css?family=Roboto:100');
 
   .playlist {
     position: absolute;
-    z-index: 1111;
+    z-index: 31;
     top: 35px;
     color: white;
-    left: 0;
+    left: 26px;
+    background: transparent;
+    border: none;
+  }
+
+  .playlist:focus {
+    outline: none;
   }
 
   .heart {
@@ -295,7 +309,7 @@
     align-items: center;
     border: 3px solid #101010;
     border-radius: 36px;
-    /*overflow: hidden;*/
+    overflow: hidden;
 
   }
 
@@ -326,21 +340,26 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 72vh;
+    height: 92vh;
   }
 </style>
 <script>
   import axios from 'axios'
   import VueYoutube from 'vue-youtube'
   import music from '../api/data'
+  import userPlaylist from '../components/userPlaylist'
+  import {EventBus} from "../assets/bus";
 
   export default {
     components: {
-      axios, VueYoutube, music
+      axios, VueYoutube, music, userPlaylist
     },
     computed: {
       player() {
         return this.$refs.youtube.player
+      },
+      currentPlay() {
+        return this.$store.state.currentTrack
       }
     },
     watch: {
@@ -354,14 +373,20 @@
         repeatOne: false,
         tracks: music,
         sound: false,
-        currentPlay: 9,
+        // currentPlay: 0,
         disable: false,
         time: "",
         volume: 50,
-        favourites: []
+        favourites: [],
+        playlist: false
       }
     },
     methods: {
+      changeCurrentPlay(val) {
+        this.currentPlay = val
+        console.log('hui')
+        this.play()
+      },
       mute() {
         if (this.volume === 0) {
           this.volume = 50
@@ -380,30 +405,13 @@
         this.player.playVideo();
         this.timer()
       },
-      timer() {
-        this.time = setInterval(() => {
-          this.startTime++
-          if (this.startTime === this.tracks[this.currentPlay].duration && this.repeatOne !== true) {
-            this.next();
-          }
-          if (this.startTime === this.tracks[this.currentPlay].duration && this.repeatOne === true) {
-            this.startTime = 0;
-            this.player.seekTo(0, true);
-
-          }
-          if (this.startTime === this.tracks[this.currentPlay].duration || this.sound === false) {
-            window.clearInterval(this.time)
-            console.log('stop')
-          }
-        }, 1000);
-
-      },
       previous() {
         if (this.currentPlay === 0) {
-          this.currentPlay = this.tracks.length - 1
+          this.$store.commit('changeTrack' , this.tracks.length - 1)
+          // this.currentPlay = this.tracks.length - 1 замена выше!
         }
         else {
-          this.currentPlay--;
+          this.$store.commit('changeTrack' , this.currentPlay - 1)
         }
         this.sound = false;
         this.disable = true
@@ -416,12 +424,12 @@
       },
       next() {
         if (this.currentPlay === this.tracks.length - 1) {
-          this.currentPlay = 0
+          this.$store.commit('changeTrack' , 0)
           window.clearInterval(this.time)
         }
         else {
           console.log(this.tracks.length - 1, this.currentPlay);
-          this.currentPlay++;
+          this.$store.commit('changeTrack' , this.currentPlay + 1)
           window.clearInterval(this.time)
           this.disable = true
         }
@@ -441,7 +449,34 @@
         localStorage.setItem('fav', parseFav)
         // this.favourites = localStorage.fav
         console.log(this.favourites)
+      },
+      timer() {
+        this.time = setInterval(() => {
+          this.startTime++
+          if (this.startTime === this.tracks[this.currentPlay].duration && this.repeatOne !== true) {
+            this.next();
+          }
+          if (this.startTime === this.tracks[this.currentPlay].duration && this.repeatOne === true) {
+            this.startTime = 0;
+            this.player.seekTo(0, true);
+
+          }
+          if (this.startTime === this.tracks[this.currentPlay].duration || this.sound === false) {
+            window.clearInterval(this.time)
+            console.log('stop')
+          }
+        }, 1000);
+
       }
     },
+    mounted() {
+      EventBus.$on('bla', () => {
+        setTimeout(() => {
+          window.clearInterval(this.time)
+          this.play()
+          this.startTime = 0
+        }, 1)
+      })
+    }
   }
 </script>
