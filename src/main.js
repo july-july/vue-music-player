@@ -1,27 +1,29 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
-
 import Vue from 'vue'
 import App from './App'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import store from './assets/store'
 import VueYoutube from 'vue-youtube'
-// import  { mixin } from "./assets/mixin";
+import VueRouter from 'vue-router'
+import router from './router'
+import util from './assets/util'
 
 Vue.use(VueAxios, axios)
 Vue.use(VueYoutube)
-// Vue.mixin(mixin)
-import store from './assets/store'
+Vue.use(VueRouter)
+
 Vue.config.productionTip = false
 
 
-
-
-/* eslint-disable no-new */
 new Vue({
   el: '#app',
   store,
+  router,
   components: {App},
-  template: '<App/>'
+  template: '<App/>',
+  created(){
+    util.checkUpdate()
+  }
+
 })
 

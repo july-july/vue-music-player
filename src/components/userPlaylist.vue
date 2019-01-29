@@ -1,42 +1,37 @@
 <template>
   <div class="playlist-container">
-    <h2 class="title-playlist">All music</h2>
-    <!--<button type="button" @click="mut">button</button>-->
-    <ul class="playlist-ul">
-      <li class="playlist-item" :class="{song_active : currentPlay === tracks[index].id}"
-          v-for="(item, index) in tracks" :key="index" @click="playSong(index)">
-        <img :src="item.album.image" alt="" class="playlist-album">
-        <p>
-          <span class="song-name">{{item.name}}</span>
-          <span class="artist-name">{{item.artist}}</span>
-        </p>
-        <p v-show="currentPlay === tracks[index].id">
-          <svg xmlns="http://www.w3.org/2000/svg" class="equilizer" :class="{stop_song : sound === false}"
-               viewBox="0 0 128 128">
-            <g>
-              <rect class="bar" transform="translate(0,0)" y="15"></rect>
-              <rect class="bar" transform="translate(25,0)" y="15"></rect>
-              <rect class="bar" transform="translate(50,0)" y="15"></rect>
-              <rect class="bar" transform="translate(75,0)" y="15"></rect>
-              <rect class="bar" transform="translate(100,0)" y="15"></rect>
-            </g>
-          </svg>
-        </p>
-
-      </li>
-    </ul>
+    <div class="user-bar">
+      <div class="user-name" @click="$router.push('/profile')">
+        <span>Admin</span>
+      </div>
+      <div class="user-avatar"  @click="$router.push('/profile')">
+        <img src="https://avatars.yandex.net/get-music-content/34131/70947499.a.3179720-1/200x200" alt="">
+      </div>
+    </div>
+    <div class="playlist-menu">
+      <a><h2 class="title-playlist" :class="{'active': active_tab === 'AllMusic'}" @click="changePlaylist('AllMusic')">
+        All music</h2></a>
+      <a><h2 class="title-playlist" :class="{'active': active_tab === 'Favourites'}"
+             @click="changePlaylist('Favourites')">Favourites</h2></a>
+      <a><h2 class="title-playlist" :class="{'active': active_tab === 'Artist'}" @click="changePlaylist('Artist')">
+        Artist</h2></a>
+      <a><h2 class="title-playlist" :class="{'active': active_tab === 'Album'}" @click="changePlaylist('Album')">
+        Albums</h2></a>
+    </div>
+    <playlist-switch :tracks="tracks" :sound="sound"></playlist-switch>
   </div>
 </template>
-
 <script>
   import {mixin} from "../assets/mixin";
   import {EventBus} from "../assets/bus";
+  import playlistSwitch from './playlistSwitch'
 
   export default {
     name: "userPlaylist",
+    components: {playlistSwitch},
     data() {
       return {
-
+        active_tab: 'AllMusic'
       }
     },
     computed: {
@@ -47,22 +42,29 @@
     props: ['tracks', 'sound'],
     methods: {
       playSong(index) {
-        // this.currentPlay = this.tracks[index].id;
+
         this.$store.commit('changeTrack', this.tracks[index].id)
         EventBus.$emit('bla')
-        // this.$emit('play')
-        // this.play()
+      },
+      changePlaylist(name) {
+        EventBus.$emit('bind-call-tab', name);
+        this.active_tab = name
       }
     },
-    // watch: {
-    //   currentPlay(n) {
-    //     this.$emit('current-play', n);
-    //   }
-    // }
+
   }
 </script>
 
-<style scoped>
+<style>
+  .user-bar {
+    height: 50px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 20px 10px 0 10px;
+    background: #000000a3;
+
+  }
   .playlist-container {
     position: absolute;
     z-index: 20;
@@ -78,198 +80,74 @@
     left: 0px;
   }
 
-  .playlist-ul {
-    list-style: none;
-    padding: 10px;
-    text-align: left;
-    overflow-y: scroll;
-    height: 540px;
-  }
-
-  .playlist-ul a {
-    text-decoration: none;
-  }
-
-  .playlist-item {
-    color: #d2d2d2;
-    padding: 5px 10px;
-    height: 40px;
-    display: -webkit-box;
-    display: -ms-flexbox;
+  .playlist-menu {
     display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    border-bottom: 1px solid #ffffff36;
-  }
-
-  .playlist-item:last-of-type {
-    border-bottom: none;
-  }
-
-  .playlist-album {
-    width: 40px;
-    height: 40px;
-  }
-
-  .song-name {
-    display: block;
-    font-size: 13px;
-    width: 170px;
+    flex-wrap: nowrap;
     white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
+    justify-content: space-between;
+    padding-left: 100px;
+    align-items: center;
+    overflow-y: scroll;
+    margin-top: 15px;
   }
 
-  .song_active {
-    background: rgba(128, 128, 128, 0.62);
-    border: none;
+  .playlist-menu ::-webkit-scrollbar {
+    display: none;
   }
 
-  .artist-name {
-    font-size: 11px;
+  .playlist-menu h2 {
+    font-size: 13px;
+    font-weight: 100;
+    transition: font-size .3s linear;
+
+  }
+
+  .playlist-menu a {
+    margin-right: 10px;
+    margin-left: 10px;
+
+  }
+
+  .playlist-menu a:last-of-type {
+    padding-right: 120px;
+  }
+
+  .playlist-menu h2.active {
+    font-size: 20px;
+    color: #fff;
+
   }
 
   .title-playlist {
     color: #d2d2d2;
     font-weight: 100;
-    margin-top: 50px;
+    margin-top: 0px;
+    margin-bottom: 0;
   }
 
-  ::-webkit-scrollbar {
-    width: 4px;
+  .user-avatar {
+    width: 30px;
+    height: 30px;
+    overflow: hidden;
+    border-radius: 50%;
+    margin: 0 10px 0 7px;
   }
-
-  ::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 5px grey;
-    border-radius: 10px;
+  .user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
   }
-
-  ::-webkit-scrollbar-thumb {
-    background: #444444;
-    border-radius: 10px;
+  .user-name {
+    font-size: 11px;
+    color: rgba(238, 238, 238, 0.6);
+    font-weight: 400;
   }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 0, 0, 0.76);
+  .user-name span {
+    max-width: 70px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
   }
-
-  .equilizer {
-    height: 20px;
-    width: 20px;
-    transform: rotate(180deg);
-  }
-
-  .bar {
-    fill: rgba(255, 255, 255, 0.61);
-    width: 18px;
-    animation: equalize 10s 0s ease-in infinite;
-  }
-
-  .stop_song .bar {
-    animation: none;
-    height: 20px;
-  }
-
-  .bar:nth-child(1) {
-    animation-delay: -1.9s;
-  }
-
-  .bar:nth-child(2) {
-    animation-delay: -2s;
-  }
-
-  .bar:nth-child(3) {
-    animation-delay: -2.3s;
-  }
-
-  .bar:nth-child(4) {
-    animation-delay: -2.4s;
-  }
-
-  .bar:nth-child(5) {
-    animation-delay: -2.1s;
-  }
-
-  @keyframes equalize {
-    0% {
-      height: 60px;
-    }
-    4% {
-      height: 50px;
-    }
-    8% {
-      height: 40px;
-    }
-    12% {
-      height: 30px;
-    }
-    16% {
-      height: 20px;
-    }
-    20% {
-      height: 30px;
-    }
-    24% {
-      height: 40px;
-    }
-    28% {
-      height: 10px;
-    }
-    32% {
-      height: 40px;
-    }
-    36% {
-      height: 60px;
-    }
-    40% {
-      height: 20px;
-    }
-    44% {
-      height: 40px;
-    }
-    48% {
-      height: 70px;
-    }
-    52% {
-      height: 30px;
-    }
-    56% {
-      height: 10px;
-    }
-    60% {
-      height: 30px;
-    }
-    64% {
-      height: 50px;
-    }
-    68% {
-      height: 60px;
-    }
-    72% {
-      height: 70px;
-    }
-    76% {
-      height: 80px;
-    }
-    80% {
-      height: 70px;
-    }
-    84% {
-      height: 60px;
-    }
-    88% {
-      height: 50px;
-    }
-    92% {
-      height: 60px;
-    }
-    96% {
-      height: 70px;
-    }
-    100% {
-      height: 40px;
-    }
-  }
-
 </style>

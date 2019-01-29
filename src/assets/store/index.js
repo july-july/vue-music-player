@@ -3,11 +3,17 @@ import Vuex from 'vuex';
 
 Vue.use(Vuex);
 const state = {
-  currentTrack: 0
+  currentTrack: 0,
+  user: {
+    // token: null
+  }
 }
 const mutations = {
   changeTrack(state, payload) {
     state.currentTrack = payload
+  },
+  setUser(state, user) {
+    state.user = user
   }
 }
 export default new Vuex.Store({

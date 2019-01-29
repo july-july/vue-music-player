@@ -1,6 +1,5 @@
 <template>
-  <div class="music-app">
-    <div class="player-container">
+  <div class="player-content">
       <div class="back-player" :style="{backgroundImage:  'url('+ tracks[currentPlay].album.image + ')'}">
       </div>
       <button @click="playlist = !playlist" type="button" class="playlist"><i class="fa fa-bars"></i></button>
@@ -23,12 +22,13 @@
               <span v-if="Math.floor(tracks[currentPlay].duration/60)<10">0</span>{{Math.floor(tracks[currentPlay].duration/60)}}:<span
               v-if="Math.floor(tracks[currentPlay].duration%60)<10">0</span>{{tracks[currentPlay].duration%60}}</span>
           </div>
-          <div class="slider" data-direction="horizontal">
-            <div class="progress"
-                 :style="{width: parseFloat((startTime/tracks[currentPlay].duration)*100).toFixed(1) + '%'}">
-              <div class="pin" id="progress-pin" data-method="rewind"></div>
-            </div>
-          </div>
+          <input type="range" min="0" :max="tracks[currentPlay].duration" :value="startTime"/>
+          <!--<div class="slider" data-direction="horizontal">-->
+            <!--<div class="progress"-->
+                 <!--:style="{width: parseFloat((startTime/tracks[currentPlay].duration)*100).toFixed(1) + '%'}">-->
+              <!--<div class="pin" id="progress-pin" data-method="rewind"></div>-->
+            <!--</div>-->
+          <!--</div>-->
         </div>
         <div class="control">
           <button @click="previous" :class="{disabled: disable === true}"><i
@@ -38,6 +38,7 @@
           <button @click="next" :class="{'disabled': disable === true}"><i class="fa fa-forward"></i></button>
         </div>
         <div class="options">
+          <!--<button type="button" @click="changeSort">bla</button>-->
           <button :class="{active: repeatOne}" @click="repeatOne= !repeatOne"><img
             src="https://music.yandex.ru/i/DzKyWD6KqIX8_M1MQHEp8piq-s.svg" alt=""></button>
           <button type="button" @click="like" v-show=""><i class="fa fa-heart-o"></i></button>
@@ -45,18 +46,17 @@
       </div>
       <user-playlist
         :class="{playlist_active : playlist===true}"
-        :tracks="tracks"
+        :tracks="dynamicTracks"
         @current-play="changeCurrentPlay"
         @play="play"
         :sound="sound"
       ></user-playlist>
-    </div>
+
     <youtube style="display: none" ref="youtube" :video-id="tracks[currentPlay].youtubeId"></youtube>
   </div>
 </template>
 <style>
-  @import url('https://fonts.googleapis.com/css?family=Roboto');
-  @import url('https://fonts.googleapis.com/css?family=Roboto:100');
+
 
   .playlist {
     position: absolute;
@@ -78,8 +78,16 @@
 
   input[type=range] {
     -webkit-appearance: none;
+    width: 100%;
+    opacity: 1;
+    margin: 0;
+  }
+
+ .volume input[type=range] {
+    -webkit-appearance: none;
     width: 0;
     opacity: 0;
+   margin: 0px 8px;
   }
 
   .volume .fa.fa-volume-off {
@@ -95,22 +103,19 @@
     height: 2px;
     cursor: pointer;
     animate: 0.2s;
-    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
     background: #808080;
     border-radius: 1.3px;
     border: 0.2px solid #010101;
   }
 
   input[type=range]::-webkit-slider-thumb {
-    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-    border: 1px solid #000000;
     height: 8px;
     width: 8px;
     border-radius: 50%;
     background: #ffffff;
     cursor: pointer;
     -webkit-appearance: none;
-    margin-top: -4px;
+    margin-top: -3px;
   }
 
   input[type=range]:focus::-webkit-slider-runnable-track {
@@ -298,34 +303,6 @@
     border-radius: 37px;
   }
 
-  .player-container {
-    width: 305px;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    text-align: center;
-    height: 673px;
-    position: relative;
-    align-items: center;
-    border: 3px solid #101010;
-    border-radius: 36px;
-    overflow: hidden;
-
-  }
-
-  .player-container:before {
-    /*background-image: url('http://aramvardanyan.me/myapp/assets/icons/iphone_x.png');*/
-    content: '';
-    position: absolute;
-    z-index: 4;
-    width: 444px;
-    height: 787px;
-    background-size: 100%;
-    background-repeat: no-repeat;
-    display: block;
-    pointer-events: none;
-  }
-
   .body-player {
     position: relative;
     z-index: 10;
@@ -336,12 +313,6 @@
     justify-content: center;
   }
 
-  .music-app {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 92vh;
-  }
 </style>
 <script>
   import axios from 'axios'
@@ -349,17 +320,27 @@
   import music from '../api/data'
   import userPlaylist from '../components/userPlaylist'
   import {EventBus} from "../assets/bus";
+  import {orderBy} from 'lodash'
 
   export default {
     components: {
       axios, VueYoutube, music, userPlaylist
     },
     computed: {
+      // getTracks () {
+      //   axios.post()
+      //     .then(() =>{
+      //
+      //     })
+      // },
       player() {
         return this.$refs.youtube.player
       },
       currentPlay() {
         return this.$store.state.currentTrack
+      },
+      dynamicTracks() {
+        return orderBy(this.tracks, ['name'], [this.sorts])
       }
     },
     watch: {
@@ -378,13 +359,14 @@
         time: "",
         volume: 50,
         favourites: [],
-        playlist: false
+        playlist: false,
+        sorts: 'asc'
       }
     },
     methods: {
       changeCurrentPlay(val) {
         this.currentPlay = val
-        console.log('hui')
+        // console.log('hui')
         this.play()
       },
       mute() {
@@ -398,7 +380,9 @@
       pause() {
         this.sound = false;
         this.player.pauseVideo()
-
+      },
+      changeSort() {
+        this.sorts = this.sorts === 'asc' ? 'desc' : 'asc'
       },
       play() {
         this.sound = true;
@@ -407,11 +391,11 @@
       },
       previous() {
         if (this.currentPlay === 0) {
-          this.$store.commit('changeTrack' , this.tracks.length - 1)
+          this.$store.commit('changeTrack', this.tracks.length - 1)
           // this.currentPlay = this.tracks.length - 1 замена выше!
         }
         else {
-          this.$store.commit('changeTrack' , this.currentPlay - 1)
+          this.$store.commit('changeTrack', this.currentPlay - 1)
         }
         this.sound = false;
         this.disable = true
@@ -424,12 +408,12 @@
       },
       next() {
         if (this.currentPlay === this.tracks.length - 1) {
-          this.$store.commit('changeTrack' , 0)
+          this.$store.commit('changeTrack', 0)
           window.clearInterval(this.time)
         }
         else {
           console.log(this.tracks.length - 1, this.currentPlay);
-          this.$store.commit('changeTrack' , this.currentPlay + 1)
+          this.$store.commit('changeTrack', this.currentPlay + 1)
           window.clearInterval(this.time)
           this.disable = true
         }
