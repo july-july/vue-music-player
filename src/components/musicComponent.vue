@@ -1,56 +1,56 @@
 <template>
   <div class="player-content">
-      <div class="back-player" :style="{backgroundImage:  'url('+ tracks[currentPlay].album.image + ')'}">
-      </div>
-      <button @click="playlist = !playlist" type="button" class="playlist"><i class="fa fa-bars"></i></button>
-      <div class="body-player">
+    <div class="back-player" :style="{backgroundImage:  'url('+ tracks[currentPlay].album.image + ')'}">
+    </div>
+    <button @click="playlist = !playlist" type="button" class="playlist"><i class="fa fa-bars"></i></button>
+    <div class="body-player">
         <span class="volume" style="color: white">
             <i class="fa fa-volume-up"></i>
           <input type="range" class="volume-range" v-model="volume" min="0" max="100" step="1"/>
           <i class="fa fa-volume-off" @click="mute"></i>
         </span>
-        <p><img :src="tracks[currentPlay].album.image" alt="" class="music-img"
-                style="box-shadow: 1px 3px 4px 1px #00000087;"></p>
-        <p class="name">{{tracks[currentPlay].name}}</p>
-        <p class="artist">{{tracks[currentPlay].artist}}</p>
-        <div id="timeline">
-          <div class="timing">
+      <p><img :src="tracks[currentPlay].album.image" alt="" class="music-img"
+              style="box-shadow: 1px 3px 4px 1px #00000087;"></p>
+      <p class="name">{{tracks[currentPlay].name}}</p>
+      <p class="artist">{{tracks[currentPlay].artist}}</p>
+      <div id="timeline">
+        <div class="timing">
             <span id="current-time">
               <span v-if="Math.floor(startTime/60) < 10">0</span>{{Math.floor(startTime/60)}}:<span
               v-if="startTime%60 < 10 ">0</span>{{startTime%60}}</span>
-            <span id="total-time">
+          <span id="total-time">
               <span v-if="Math.floor(tracks[currentPlay].duration/60)<10">0</span>{{Math.floor(tracks[currentPlay].duration/60)}}:<span
-              v-if="Math.floor(tracks[currentPlay].duration%60)<10">0</span>{{tracks[currentPlay].duration%60}}</span>
-          </div>
-          <input type="range" min="0" :max="tracks[currentPlay].duration" :value="startTime"/>
-          <!--<div class="slider" data-direction="horizontal">-->
-            <!--<div class="progress"-->
-                 <!--:style="{width: parseFloat((startTime/tracks[currentPlay].duration)*100).toFixed(1) + '%'}">-->
-              <!--<div class="pin" id="progress-pin" data-method="rewind"></div>-->
-            <!--</div>-->
-          <!--</div>-->
+            v-if="Math.floor(tracks[currentPlay].duration%60)<10">0</span>{{tracks[currentPlay].duration%60}}</span>
         </div>
-        <div class="control">
-          <button @click="previous" :class="{disabled: disable === true}"><i
-            class="fa fa-backward"></i></button>
-          <button v-show="!sound" @click="play"><i class="fa fa-play"></i></button>
-          <button v-show="sound" @click="pause"><i class="fa fa-pause"></i></button>
-          <button @click="next" :class="{'disabled': disable === true}"><i class="fa fa-forward"></i></button>
-        </div>
-        <div class="options">
-          <!--<button type="button" @click="changeSort">bla</button>-->
-          <button :class="{active: repeatOne}" @click="repeatOne= !repeatOne"><img
-            src="https://music.yandex.ru/i/DzKyWD6KqIX8_M1MQHEp8piq-s.svg" alt=""></button>
-          <button type="button" @click="like" v-show=""><i class="fa fa-heart-o"></i></button>
-        </div>
+        <input type="range" min="0" :max="tracks[currentPlay].duration" step="1" @change="seek(startTime, true)" v-model="startTime"/>
+        <!--<div class="slider" data-direction="horizontal">-->
+        <!--<div class="progress"-->
+        <!--:style="{width: parseFloat((startTime/tracks[currentPlay].duration)*100).toFixed(1) + '%'}">-->
+        <!--<div class="pin" id="progress-pin" data-method="rewind"></div>-->
+        <!--</div>-->
+        <!--</div>-->
       </div>
-      <user-playlist
-        :class="{playlist_active : playlist===true}"
-        :tracks="dynamicTracks"
-        @current-play="changeCurrentPlay"
-        @play="play"
-        :sound="sound"
-      ></user-playlist>
+      <div class="control">
+        <button @click="previous" :class="{disabled: disable === true}"><i
+          class="fa fa-backward"></i></button>
+        <button v-show="!sound" @click="play"><i class="fa fa-play"></i></button>
+        <button v-show="sound" @click="pause"><i class="fa fa-pause"></i></button>
+        <button @click="next" :class="{'disabled': disable === true}"><i class="fa fa-forward"></i></button>
+      </div>
+      <div class="options">
+        <!--<button type="button" @click="changeSort">bla</button>-->
+        <button :class="{active: repeatOne}" @click="repeatOne= !repeatOne"><img
+          src="https://music.yandex.ru/i/DzKyWD6KqIX8_M1MQHEp8piq-s.svg" alt=""></button>
+        <button type="button" @click="like" v-show=""><i class="fa fa-heart-o"></i></button>
+      </div>
+    </div>
+    <user-playlist
+      :class="{playlist_active : playlist===true}"
+      :tracks="dynamicTracks"
+      @current-play="changeCurrentPlay"
+      @play="play"
+      :sound="sound"
+    ></user-playlist>
 
     <youtube style="display: none" ref="youtube" :video-id="tracks[currentPlay].youtubeId"></youtube>
   </div>
@@ -83,11 +83,11 @@
     margin: 0;
   }
 
- .volume input[type=range] {
+  .volume input[type=range] {
     -webkit-appearance: none;
     width: 0;
     opacity: 0;
-   margin: 0px 8px;
+    margin: 0px 8px;
   }
 
   .volume .fa.fa-volume-off {
@@ -341,7 +341,7 @@
       },
       dynamicTracks() {
         return orderBy(this.tracks, ['name'], [this.sorts])
-      }
+      },
     },
     watch: {
       volume: function () {
@@ -364,6 +364,12 @@
       }
     },
     methods: {
+      seek (a, y) {
+        this.player.seekTo(a,y)
+        if(this.sound === false) {
+          this.pause()
+        }
+      },
       changeCurrentPlay(val) {
         this.currentPlay = val
         // console.log('hui')
@@ -451,7 +457,7 @@
           }
         }, 1000);
 
-      }
+      },
     },
     mounted() {
       EventBus.$on('bla', () => {
