@@ -55,99 +55,99 @@
   }
 </script>
 
-<style>
-  .user-bar {
-    height: 50px;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding: 20px 10px 0 10px;
-    background: #000000a3;
+<!--<style>-->
+  <!--.user-bar {-->
+    <!--height: 50px;-->
+    <!--display: flex;-->
+    <!--justify-content: flex-end;-->
+    <!--align-items: center;-->
+    <!--padding: 20px 10px 0 10px;-->
+    <!--background: #000000a3;-->
 
-  }
-  .playlist-container {
-    position: absolute;
-    z-index: 20;
-    background: rgba(0, 0, 0, 0.75);
-    width: 100%;
-    height: 100%;
-    border-radius: inherit;
-    left: -100%;
-    transition: all 0.4s ease-in-out;
-  }
+  <!--}-->
+  <!--.playlist-container {-->
+    <!--position: absolute;-->
+    <!--z-index: 20;-->
+    <!--background: rgba(0, 0, 0, 0.75);-->
+    <!--width: 100%;-->
+    <!--height: 100%;-->
+    <!--border-radius: inherit;-->
+    <!--left: -100%;-->
+    <!--transition: all 0.4s ease-in-out;-->
+  <!--}-->
 
-  .playlist_active {
-    left: 0px;
-  }
+  <!--.playlist_active {-->
+    <!--left: 0px;-->
+  <!--}-->
 
-  .playlist-menu {
-    display: flex;
-    flex-wrap: nowrap;
-    white-space: nowrap;
-    justify-content: space-between;
-    padding-left: 100px;
-    align-items: center;
-    overflow-y: scroll;
-    margin-top: 15px;
-  }
+  <!--.playlist-menu {-->
+    <!--display: flex;-->
+    <!--flex-wrap: nowrap;-->
+    <!--white-space: nowrap;-->
+    <!--justify-content: space-between;-->
+    <!--padding-left: 100px;-->
+    <!--align-items: center;-->
+    <!--overflow-y: scroll;-->
+    <!--margin-top: 15px;-->
+  <!--}-->
 
-  .playlist-menu ::-webkit-scrollbar {
-    display: none;
-  }
+  <!--.playlist-menu ::-webkit-scrollbar {-->
+    <!--display: none;-->
+  <!--}-->
 
-  .playlist-menu h2 {
-    font-size: 13px;
-    font-weight: 100;
-    transition: font-size .3s linear;
+  <!--.playlist-menu h2 {-->
+    <!--font-size: 13px;-->
+    <!--font-weight: 100;-->
+    <!--transition: font-size .3s linear;-->
 
-  }
+  <!--}-->
 
-  .playlist-menu a {
-    margin-right: 10px;
-    margin-left: 10px;
+  <!--.playlist-menu a {-->
+    <!--margin-right: 10px;-->
+    <!--margin-left: 10px;-->
 
-  }
+  <!--}-->
 
-  .playlist-menu a:last-of-type {
-    padding-right: 120px;
-  }
+  <!--.playlist-menu a:last-of-type {-->
+    <!--padding-right: 120px;-->
+  <!--}-->
 
-  .playlist-menu h2.active {
-    font-size: 20px;
-    color: #fff;
+  <!--.playlist-menu h2.active {-->
+    <!--font-size: 20px;-->
+    <!--color: #fff;-->
 
-  }
+  <!--}-->
 
-  .title-playlist {
-    color: #d2d2d2;
-    font-weight: 100;
-    margin-top: 0px;
-    margin-bottom: 0;
-  }
+  <!--.title-playlist {-->
+    <!--color: #d2d2d2;-->
+    <!--font-weight: 100;-->
+    <!--margin-top: 0px;-->
+    <!--margin-bottom: 0;-->
+  <!--}-->
 
-  .user-avatar {
-    width: 30px;
-    height: 30px;
-    overflow: hidden;
-    border-radius: 50%;
-    margin: 0 10px 0 7px;
-  }
-  .user-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-  }
-  .user-name {
-    font-size: 11px;
-    color: rgba(238, 238, 238, 0.6);
-    font-weight: 400;
-  }
-  .user-name span {
-    max-width: 70px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: block;
-  }
-</style>
+  <!--.user-avatar {-->
+    <!--width: 30px;-->
+    <!--height: 30px;-->
+    <!--overflow: hidden;-->
+    <!--border-radius: 50%;-->
+    <!--margin: 0 10px 0 7px;-->
+  <!--}-->
+  <!--.user-avatar img {-->
+    <!--width: 100%;-->
+    <!--height: 100%;-->
+    <!--object-fit: cover;-->
+    <!--object-position: center;-->
+  <!--}-->
+  <!--.user-name {-->
+    <!--font-size: 11px;-->
+    <!--color: rgba(238, 238, 238, 0.6);-->
+    <!--font-weight: 400;-->
+  <!--}-->
+  <!--.user-name span {-->
+    <!--max-width: 70px;-->
+    <!--white-space: nowrap;-->
+    <!--overflow: hidden;-->
+    <!--text-overflow: ellipsis;-->
+    <!--display: block;-->
+  <!--}-->
+<!--</style>-->

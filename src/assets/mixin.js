@@ -5,3 +5,11 @@
 //     }
 //   }
 // }
+import youtube from 'vue-youtube'
+export const mixin = {
+  methods : {
+    player () {
+      return this.$refs.youtube.player
+    }
+  }
+}

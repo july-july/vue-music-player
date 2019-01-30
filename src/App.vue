@@ -2,17 +2,10 @@
   <div id="app">
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
           integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-    <div class="music-app">
-      <div class="player-container">
         <router-view/>
-      </div>
-    </div>
   </div>
 </template>
-
 <script>
-
-import Cookie from 'js-cookie'
   export default {
     name: 'App',
     created() {
@@ -22,11 +15,11 @@ import Cookie from 'js-cookie'
 
 </script>
 
-<style>
+<style lang="scss">
   @import url('https://fonts.googleapis.com/css?family=Roboto');
   @import url('https://fonts.googleapis.com/css?family=Roboto:100');
   @import url('https://fonts.googleapis.com/css?family=Roboto:300');
-
+  @import "bootstrap/dist/css/bootstrap.min.css";
 
   html, body {
     height: auto;
@@ -34,50 +27,28 @@ import Cookie from 'js-cookie'
     font-family: 'Roboto', sans-serif;
     margin: 0;
   }
-  button,a{
+
+  button, a {
     font-family: 'Roboto', sans-serif;
-  }
-  .music-app {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 92vh;
-  }
+    background-image: linear-gradient(to right, #de13bb, #c60eb1, #af08a6, #98049a, #82008e);
+    padding: 5px 10px;
+    color: white;
+    border-radius: 20px;
 
-  .player-container {
-    width: 305px;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    text-align: center;
-    height: 673px;
-    position: relative;
-    align-items: center;
-    border: 3px solid #101010;
-    border-radius: 36px;
-    overflow: hidden;
-    background: #ffffff9c;
+    &:hover {
+      text-decoration: none;
+      color: white;
+      background-image: linear-gradient(to right, #82008e, #98049a, #af08a6, #c60eb1, #de13bb);
+    }
 
+    &:focus {
+      outline: none;
+    }
   }
-
-  .player-container:before {
-    /*background-image: url('http://aramvardanyan.me/myapp/assets/icons/iphone_x.png');*/
-    content: '';
-    position: absolute;
-    z-index: 4;
-    width: 444px;
-    height: 787px;
-    background-size: 100%;
-    background-repeat: no-repeat;
-    display: block;
-    pointer-events: none;
-  }
-
-  .player-container .player-content {
+  .height-100 {
     height: 100%;
-    width: 100%;
-    position: relative;
-    display: flex;
-    justify-content: center;
+  }
+  p {
+    margin-bottom: 0;
   }
 </style>
