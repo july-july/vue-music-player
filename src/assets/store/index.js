@@ -4,9 +4,6 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 const state = {
   currentTrack: 0,
-  user: {
-    // token: null
-  }
 }
 const mutations = {
   changeTrack(state, payload) {

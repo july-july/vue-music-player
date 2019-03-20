@@ -19,7 +19,7 @@
 
 <style scoped lang="scss">
     .music-img {
-      width: 60px;
+      width: 50px;
     }
   .song-info-block {
     color: white;

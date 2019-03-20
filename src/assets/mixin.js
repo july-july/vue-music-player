@@ -7,9 +7,12 @@
 // }
 import youtube from 'vue-youtube'
 export const mixin = {
-  methods : {
+  components: {
+    youtube
+  },
+  computed : {
     player () {
-      return this.$refs.youtube.player
+      return this.$parent.$refs.youtube.player
     }
   }
 }
