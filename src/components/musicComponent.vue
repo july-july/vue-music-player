@@ -8,10 +8,10 @@
       <div class="col-xl-6 d-flex align-items-center">
         <song-info :tracks="tracks" :current-play="currentPlay"/>
       </div>
-      <!--<div class="col-xl-6">-->
+      <div class="col-xl-2 offset-2 d-flex justify-content-between align-items-center">
         <volume/>
         <options/>
-      <!--</div>-->
+      </div>
     </div>
     <div class="blur" :style="{backgroundImage: 'url(' + tracks[currentPlay].album.image + ')'}"></div>
 

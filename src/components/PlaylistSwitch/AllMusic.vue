@@ -11,7 +11,7 @@
           <span class="artist-name">{{item.artist}}</span>
         </p>
         <p v-show="currentPlay === tracks[index].id">
-          <svg xmlns="http://www.w3.org/2000/svg" class="equilizer" :class="{stop_song : sound === false}"
+          <svg xmlns="http://www.w3.org/2000/svg" class="equilizer" :class="{stop_song : $store.state.sound === false}"
                viewBox="0 0 128 128">
             <g>
               <rect class="bar" transform="translate(0,0)" y="15"></rect>
@@ -60,7 +60,7 @@
     padding: 10px;
     text-align: left;
     overflow-y: scroll;
-    height: 540px;
+    max-height: 700px;
   }
 
   .playlist-ul a {
@@ -69,8 +69,8 @@
 
   .playlist-item {
     color: #d2d2d2;
-    padding: 5px 10px;
-    height: 40px;
+    padding: 6px 0px;
+    height: auto;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -87,6 +87,7 @@
   .playlist-album {
     width: 40px;
     height: 40px;
+    margin-right: 20px;
   }
 
   .song-name {
