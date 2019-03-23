@@ -4,6 +4,7 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 const state = {
   currentTrack: 0,
+  repeatOne: false
 }
 const mutations = {
   changeTrack(state, payload) {
@@ -11,6 +12,9 @@ const mutations = {
   },
   setUser(state, user) {
     state.user = user
+  },
+  changeRepeatOne (state) {
+    state.repeatOne = !state.repeatOne
   }
 }
 export default new Vuex.Store({

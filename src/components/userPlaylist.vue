@@ -1,34 +1,19 @@
 <template>
   <div class="playlist-container">
-    <div class="user-bar">
-      <div class="user-name" @click="$router.push('/profile')">
-        <span>Admin</span>
-      </div>
-      <div class="user-avatar"  @click="$router.push('/profile')">
-        <img src="https://avatars.yandex.net/get-music-content/34131/70947499.a.3179720-1/200x200" alt="">
-      </div>
-    </div>
-    <div class="playlist-menu">
-      <a><h2 class="title-playlist" :class="{'active': active_tab === 'AllMusic'}" @click="changePlaylist('AllMusic')">
-        All music</h2></a>
-      <a><h2 class="title-playlist" :class="{'active': active_tab === 'Favourites'}"
-             @click="changePlaylist('Favourites')">Favourites</h2></a>
-      <a><h2 class="title-playlist" :class="{'active': active_tab === 'Artist'}" @click="changePlaylist('Artist')">
-        Artist</h2></a>
-      <a><h2 class="title-playlist" :class="{'active': active_tab === 'Album'}" @click="changePlaylist('Album')">
-        Albums</h2></a>
-    </div>
-    <playlist-switch :tracks="tracks" :sound="sound"></playlist-switch>
+    <all-music></all-music>
   </div>
 </template>
 <script>
   import {mixin} from "../assets/mixin";
   import {EventBus} from "../assets/bus";
   import playlistSwitch from './playlistSwitch'
+  import AllMusic from "./PlaylistSwitch/AllMusic";
 
   export default {
     name: "userPlaylist",
-    components: {playlistSwitch},
+    components: {
+      AllMusic,
+      playlistSwitch},
     data() {
       return {
         active_tab: 'AllMusic'

@@ -106,10 +106,10 @@
       timer() {
         this.time = setInterval(() => {
           this.startTime++
-          if (this.startTime === this.tracks[this.currentPlay].duration && this.repeatOne !== true) {
+          if (this.startTime === this.tracks[this.currentPlay].duration && this.$store.state.repeatOne !== true) {
             this.next();
           }
-          if (this.startTime === this.tracks[this.currentPlay].duration && this.repeatOne === true) {
+          if (this.startTime === this.tracks[this.currentPlay].duration && this.$store.state.repeatOne === true) {
             this.startTime = 0;
             this.player.seekTo(0, true);
 

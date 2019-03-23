@@ -1,15 +1,20 @@
 <template>
     <div class="container main-content position-relative">
+      <all-music></all-music>
     <MusicComponent/>
     </div>
 </template>
 
 <script>
   import MusicComponent from '../musicComponent'
+  import UserPlaylist from "../userPlaylist";
+  import AllMusic from "../PlaylistSwitch/AllMusic";
     export default {
         name: "ContentComponent",
       components: {
-          MusicComponent
+        AllMusic,
+        UserPlaylist,
+        MusicComponent
       }
     }
 </script>

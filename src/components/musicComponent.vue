@@ -10,7 +10,7 @@
       </div>
       <!--<div class="col-xl-6">-->
         <volume/>
-        <!--<options/>-->
+        <options/>
       <!--</div>-->
     </div>
     <div class="blur" :style="{backgroundImage: 'url(' + tracks[currentPlay].album.image + ')'}"></div>
@@ -83,7 +83,7 @@
 
     data() {
       return {
-        repeatOne: false,
+//        repeatOne: false,
         tracks: music,
         // sound: false,
         // currentPlay: 16,
