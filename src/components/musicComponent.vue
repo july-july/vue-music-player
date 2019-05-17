@@ -22,7 +22,8 @@
               <span v-if="Math.floor(tracks[currentPlay].duration/60)<10">0</span>{{Math.floor(tracks[currentPlay].duration/60)}}:<span
             v-if="Math.floor(tracks[currentPlay].duration%60)<10">0</span>{{tracks[currentPlay].duration%60}}</span>
         </div>
-        <input type="range" min="0" :max="tracks[currentPlay].duration" step="1" @change="seek(startTime, true)" v-model="startTime"/>
+        <input type="range" min="0" :max="tracks[currentPlay].duration" step="1" @change="seek(startTime, true)"
+               v-model="startTime"/>
         <!--<div class="slider" data-direction="horizontal">-->
         <!--<div class="progress"-->
         <!--:style="{width: parseFloat((startTime/tracks[currentPlay].duration)*100).toFixed(1) + '%'}">-->
@@ -364,9 +365,9 @@
       }
     },
     methods: {
-      seek (a, y) {
-        this.player.seekTo(a,y)
-        if(this.sound === false) {
+      seek(a, y) {
+        this.player.seekTo(a, y)
+        if (this.sound === false) {
           this.pause()
         }
       },
