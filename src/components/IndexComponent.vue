@@ -1,24 +1,22 @@
 <template>
   <div class="content">
-    <header-component/>
-    <ContentComponent/>
+      <MusicComponent/>
   </div>
 </template>
 
 <script>
-  import HeaderComponent from '././MainComponents/Header';
-  import ContentComponent from '././MainComponents/ContentComponent';
+  import MusicComponent from '../components/musicComponent'
 
   export default {
     name: "IndexComponent",
     components: {
-      HeaderComponent, ContentComponent
+      MusicComponent
     },
   }
 </script>
 
-<style scoped>
+<style>
     .content {
-      background: white;
+      background: transparent;
     }
 </style>

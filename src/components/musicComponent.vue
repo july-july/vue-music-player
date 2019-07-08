@@ -1,20 +1,23 @@
 <template>
-  <div class="player-content container-fluid">
+  <div class="player-content">
+    <div class="blur" :style="{backgroundImage:  'url('+ tracks[currentPlay].album.image + ')'}"></div>
+    <div class="player-inner">
+      <song-info :tracks="tracks"/>
+      <timeline :tracks="tracks" ></timeline>
+      <controls :tracks="tracks"/>
+    </div>
     <!--<div class="back-player" :style="{backgroundImage:  'url('+ tracks[currentPlay].album.image + ')'}">-->
     <!--</div>-->
     <!--<button @click="playlist = !playlist" type="button" class="playlist"><i class="fa fa-bars"></i></button>-->
-    <div class="row align-items-center height-100 position-relative " style="z-index: 2">
-        <controls :tracks="tracks" :current-play="currentPlay"/>
-      <div class="col-xl-6 d-flex align-items-center">
-        <song-info :tracks="tracks" :current-play="currentPlay"/>
-      </div>
-      <div class="col-xl-2 offset-2 d-flex justify-content-between align-items-center">
-        <volume/>
-        <options/>
-      </div>
-    </div>
-    <div class="blur" :style="{backgroundImage: 'url(' + tracks[currentPlay].album.image + ')'}"></div>
-
+<!--    <div class="row align-items-center height-100 position-relative " style="z-index: 2">-->
+<!--      <div class="col-xl-6 d-flex align-items-center">-->
+<!--
+     </div>-->
+<!--      <div class="col-xl-2 offset-2 d-flex justify-content-between align-items-center">-->
+<!--        <volume/>-->
+<!--        <options/>-->
+<!--      </div>-->
+<!--    </div>-->
 
     <!--<user-playlist-->
     <!--:class="{playlist_active : playlist===true}"-->
@@ -23,42 +26,17 @@
     <!--@play="play"-->
     <!--:sound="sound"-->
     <!--&gt;</user-playlist>-->
-    <youtube style="display: none" ref="youtube" :video-id="tracks[currentPlay].youtubeId" v-on=""></youtube>
+    <youtube style="position: absolute; top: 0; left: 0" ref="youtube" :video-id="tracks[currentPlay].youtubeId" v></youtube>
 
   </div>
 </template>
 
-<style scoped lang="scss">
-  .player-content {
-    height: 75px;
-    position: absolute;
-    width: 100%;
-    left: 0;
-    right: 0;
-    bottom: 0;
-  }
-  .blur {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    filter: blur(12px);
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-    overflow: hidden;
-    z-index: 1;
-  }
-</style>
-
 <script>
-  import axios from 'axios'
+
   import VueYoutube from 'vue-youtube'
   import music from '../api/data'
   import userPlaylist from '../components/userPlaylist'
   import {EventBus} from "../assets/bus";
-  import {orderBy} from 'lodash'
   import SongInfo from '../components/playerComponent/SongInfoComponent'
   import Volume from '../components/playerComponent/volumeComponent'
   import Timeline from '../components/playerComponent/TimelineComponent'
@@ -67,7 +45,7 @@
 
   export default {
     components: {
-      axios, VueYoutube, music, userPlaylist, SongInfo, Volume, Timeline, Controls, Options
+      VueYoutube, music, userPlaylist, SongInfo, Volume, Timeline, Controls, Options
     },
     computed: {
       // player: function (){
@@ -75,9 +53,6 @@
       // },
       currentPlay() {
         return this.$store.state.currentTrack
-      },
-      dynamicTracks() {
-        return orderBy(this.tracks, ['name'], [this.sorts])
       },
     },
 

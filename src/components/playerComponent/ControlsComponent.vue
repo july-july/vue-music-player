@@ -7,21 +7,6 @@
       <button v-show="sound" @click="pause" ><i class="fa fa-pause"></i></button>
       <button @click="next" :class="{'disabled': disable === true}"><i class="fa fa-forward"></i></button>
     </div>
-    <div id="timeline">
-      <div class="timing">
-            <span id="current-time">
-              <span v-if="Math.floor(startTime/60) < 10">0</span>{{Math.floor(startTime/60)}}:<span
-              v-if="startTime%60 < 10 ">0</span>{{startTime%60}}</span>
-        <span id="total-time">
-              <span v-if="Math.floor(tracks[currentPlay].duration/60)<10">0</span>{{Math.floor(tracks[currentPlay].duration/60)}}:<span
-          v-if="Math.floor(tracks[currentPlay].duration%60)<10">0</span>{{tracks[currentPlay].duration%60}}</span>
-      </div>
-      <div class="timer-line">
-        <div class="progress-line" :style="{'width': (startTime/tracks[currentPlay].duration)*100 + '%'}"></div>
-        <input type="range" min="0" :max="tracks[currentPlay].duration" step="1" @change="seek(startTime, true)"
-               v-model="startTime"/>
-      </div>
-    </div>
   </div>
 
 </template>
@@ -43,7 +28,7 @@
         time: ""
       }
     },
-    props: ['tracks', 'currentPlay'],
+    props: ['tracks'],
     mixins: [mixin],
     // computed:{
     //   this.player()
@@ -121,80 +106,11 @@
         }, 1000);
 
       },
+    },
+    computed: {
+      currentPlay() {
+        return this.$store.state.currentTrack
+      },
     }
   }
 </script>
-
-<style scoped lang="scss">
-  .timer-line {
-    top: -12px;
-    position: absolute;
-    width: 100%;
-    height: 6px;
-    background: white;
-  }
-
-  .progress-line {
-    height: 6px;
-    position: relative;
-    background-image: linear-gradient(to right, #de13bb, #c60eb1, #af08a6, #98049a, #82008e);
-    z-index: 1;
-  }
-
-  #timeline {
-    width: 100%;
-    position: absolute;
-    top: 4px;
-    .timing {
-      width: 100%;
-      display: -webkit-box;
-      display: -ms-flexbox;
-      display: flex;
-      -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-      justify-content: space-between;
-      padding: 0 10px;
-      color: white;
-      font-size: 12px;
-      position: absolute;
-      top: -33px;
-    }
-    input[type='range'] {
-      position: absolute;
-      left: 0;
-      width: 100%;
-      -webkit-appearance: none;
-      height: 6px;
-      top: 0;
-      cursor: grab;
-      background: transparent;
-      z-index: 11;
-      &:focus {
-        outline: none;
-      }
-      &::-webkit-slider-thumb {
-        background: transparent !important;
-        height: 1px;
-        -webkit-appearance: none;
-        width: 1px;
-      }
-    }
-  }
-  .control {
-    button {
-      background-image: none;
-      background: transparent;
-      border: none;
-      i {
-        /*background: -moz-linear-gradient(right, #de13bb, #c60eb1, #af08a6, #98049a, #82008e);*/
-        /*background: -webkit-linear-gradient(right, #de13bb, #c60eb1, #af08a6, #98049a, #82008e);*/
-        /*background: linear-gradient(to right, #de13bb, #c60eb1, #af08a6, #98049a, #82008e);*/
-        /*-webkit-background-clip: text;*/
-        /*-moz-background-clip: text;*/
-        /*background-clip: text;*/
-        /*-webkit-text-fill-color: transparent;*/
-        color: #fff;
-      }
-    }
-  }
-</style>

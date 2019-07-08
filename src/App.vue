@@ -51,4 +51,5 @@
   p {
     margin-bottom: 0;
   }
+  @import "assets/scss/index";
 </style>
