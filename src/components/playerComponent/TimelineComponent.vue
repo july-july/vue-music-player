@@ -2,16 +2,16 @@
   <div id="timeline">
     <div class="timing">
             <span id="current-time">
-              <span v-if="Math.floor(startTime/60) < 10">0</span>{{Math.floor(startTime/60)}}:<span
-              v-if="startTime%60 < 10 ">0</span>{{startTime%60}}</span>
+              <span v-if="Math.floor(start/60) < 10">0</span>{{Math.floor(start/60)}}:<span
+              v-if="start%60 < 10 ">0</span>{{start%60}}</span>
       <span id="total-time">
               <span v-if="Math.floor(tracks[currentPlay].duration/60)<10">0</span>{{Math.floor(tracks[currentPlay].duration/60)}}:<span
         v-if="Math.floor(tracks[currentPlay].duration%60)<10">0</span>{{tracks[currentPlay].duration%60}}</span>
     </div>
     <div class="timer-line">
-      <div class="progress-line" :style="{'width': (startTime/tracks[currentPlay].duration)*100 + '%'}"></div>
-      <input type="range" min="0" :max="tracks[currentPlay].duration" step="1" @change="seek(startTime, true)"
-             v-model="startTime"/>
+      <div class="progress-line" :style="{'width': (start/tracks[currentPlay].duration)*100 + '%'}"></div>
+      <input type="range" min="0" :max="tracks[currentPlay].duration" step="1" @change="seek(start, true)"
+             v-model="start"/>
     </div>
   </div>
 </template>
@@ -24,11 +24,10 @@
     mixins: [mixin],
     data() {
       return {
-        startTime: 0,
         time: "",
       }
     },
-    props: ['tracks', 'currentPlay'],
+    props: ['tracks', 'start'],
     computed: {
       currentPlay() {
         return this.$store.state.currentTrack
@@ -40,24 +39,6 @@
         if (this.sound === false) {
           this.pause()
         }
-      },
-      timer() {
-        this.time = setInterval(() => {
-          this.startTime++
-          if (this.startTime === this.tracks[this.currentPlay].duration && this.repeatOne !== true) {
-            this.next();
-          }
-          if (this.startTime === this.tracks[this.currentPlay].duration && this.repeatOne === true) {
-            this.startTime = 0;
-            this.player.seekTo(0, true);
-
-          }
-          if (this.startTime === this.tracks[this.currentPlay].duration || this.sound === false) {
-            window.clearInterval(this.time)
-            console.log('stop')
-          }
-        }, 1000);
-
       },
     }
   }

@@ -1,13 +1,12 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import data from '../../api/data'
 
 Vue.use(Vuex);
 const state = {
-  currentTrack: 0,
+  currentTrack: 7,
   repeatOne: false,
   sound: false,
-  tracks: data
+  startTime: 0
 
 }
 const mutations = {
@@ -20,11 +19,16 @@ const mutations = {
   changeRepeatOne (state) {
     state.repeatOne = !state.repeatOne
   },
-  changeSound (state) {
-    state.sound = !state.sound
+  changeSound (state, payload) {
+    state.sound = payload
+  },
+  changeStartTime (state, payload) {
+    state.startTime = payload
   }
 }
-
+const getters = {
+  'getStartTime': state => state.startTime
+}
 export default new Vuex.Store({
   state,
   mutations,
