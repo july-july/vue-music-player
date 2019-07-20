@@ -13,9 +13,6 @@ const mutations = {
   changeTrack(state, payload) {
     state.currentTrack = payload
   },
-  setUser(state, user) {
-    state.user = user
-  },
   changeRepeatOne (state) {
     state.repeatOne = !state.repeatOne
   },

@@ -5,6 +5,7 @@
          <i class="fa fa-volume-up"></i>
         </button>
         <div class="range-container">
+          <div class="volume-value" :style="{width: volume + 'px'}"></div>
           <input type="range" class="volume-range" v-model="volume" min="0" max="100" step="1"/>
         </div>
       </span>
@@ -45,12 +46,20 @@
     color: white;
     display: flex;
     align-items: center;
-    /*flex-direction: column-reverse;*/
-    input {
-      /*-webkit-appearance: slider-vertical;*/
-    }
+    position: relative;
     .range-container {
-      /*position: absolute;*/
+      position: relative;
+      transform: rotate(-90deg);
+      top: -67px;
+      left: -68px;
+      overflow: hidden;
+
+      .volume-value {
+        position: absolute;
+        height: 100%;
+        left: 0;
+        background-image: linear-gradient(to right, #de13bb, #c60eb1, #af08a6, #98049a, #82008e);
+      }
     }
     .mute {
       background: transparent;
@@ -63,30 +72,18 @@
       bottom: 55px;
       z-index: 12;
       background: rgb(53, 53, 53);
-      width: 64px;
-      padding: 12px;
       border-radius: 10px;
       display: flex;
       justify-content: center;
+      width: 100px;
+      height: 14px;
       input[type='range'] {
-        width: 54px;
+        width: 100px;
+        height: 14px;
+        opacity: 0;
         background: transparent;
         position: relative;
         z-index: 1111;
-        &::-webkit-slider-runnable-track {
-          -webkit-appearance: none;
-          background: transparent;
-          width: 54px;
-          border-radius: 10px;
-          box-shadow: 0 0 0 2px #3D3D4A;
-        }
-        &::-webkit-slider-thumb {
-          width: 30px;
-          height: 30px;
-          opacity: 1;
-          border-radius: 50%;
-          background-color: red;
-        }
       }
       &:hover {
         visibility: visible;

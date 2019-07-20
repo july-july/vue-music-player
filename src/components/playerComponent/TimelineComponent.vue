@@ -10,21 +10,19 @@
     </div>
     <div class="timer-line">
       <div class="progress-line" :style="{'width': (start/tracks[currentPlay].duration)*100 + '%'}"></div>
-      <input type="range" min="0" :max="tracks[currentPlay].duration" step="1" @change="seek(start, true)"
-             v-model="start"/>
+      <input type="range" min="0" :max="tracks[currentPlay].duration" step="1" @change="seekTime(currentSeconds)"
+             v-model="currentSeconds"/>
     </div>
   </div>
 </template>
 
 <script>
-  import {mixin} from "../../assets/mixin";
-
   export default {
     name: "TimelineComponent",
-    mixins: [mixin],
     data() {
       return {
         time: "",
+        currentSeconds: null
       }
     },
     props: ['tracks', 'start'],
@@ -34,11 +32,9 @@
       },
     },
     methods: {
-      seek(a, y) {
-        this.player.seekTo(a, y)
-        if (this.sound === false) {
-          this.pause()
-        }
+      seekTime(seconds) {
+        this.currentSeconds = seconds;
+        this.$emit('seek', this.currentSeconds)
       },
     }
   }

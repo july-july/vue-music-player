@@ -3,7 +3,7 @@
     <div class="blur" :style="{backgroundImage:  'url('+ tracks[currentPlay].album.image + ')'}"></div>
     <div class="player-inner">
       <song-info :tracks="tracks"/>
-      <timeline :tracks="tracks"  :start="startTime"/>
+      <timeline :tracks="tracks"  :start="startTime"  @seek="seek"/>
       <controls :timer="timer"
                 :tracks="tracks"
                 :next="next"
@@ -11,8 +11,8 @@
                 @pause="pause"
                 @play="play"
                 :sound="soundState"
-
       />
+              <volume/>
     </div>
 
     <!--<button @click="playlist = !playlist" type="button" class="playlist"><i class="fa fa-bars"></i></button>-->
@@ -80,25 +80,10 @@
       }
     },
     // methods: {
-    //   seek(a, y) {
-    //     this.player.seekTo(a, y)
-    //     if (this.sound === false) {
-    //       this.pause()
-    //     }
-    //   },
     //   changeCurrentPlay(val) {
     //     this.currentPlay = val
     //     // console.log('hui')
     //     this.play()
-    //   },
-    //   like() {
-    //     this.favourites.push(
-    //       this.tracks[this.currentPlay]
-    //     )
-    //     const parseFav = JSON.stringify(this.favourites);
-    //     localStorage.setItem('fav', parseFav)
-    //     // this.favourites = localStorage.fav
-    //     console.log(this.favourites)
     //   },
     methods: {
       timer() {
@@ -133,7 +118,7 @@
           window.clearInterval(this.time)
           // this.disable = true
         }
-        this.sound = false;
+        this.$store.commit('changeSound', false)
         this.timer();
         this.startTime = 0;
         setTimeout(() => {
@@ -148,7 +133,7 @@
         else {
           this.$store.commit('changeTrack', this.currentPlay - 1)
         }
-        this.sound = false;
+        this.$store.commit('changeSound', false)
         this.disable = true
         window.clearInterval(this.time)
         setTimeout(() => {
@@ -159,7 +144,7 @@
       },
       seek(a, y) {
         this.player.seekTo(a, y)
-        if (this.sound === false) {
+        if (this.soundState === false) {
           this.pause()
         }
       },

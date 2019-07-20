@@ -19,7 +19,7 @@
   @import url('https://fonts.googleapis.com/css?family=Roboto');
   @import url('https://fonts.googleapis.com/css?family=Roboto:100');
   @import url('https://fonts.googleapis.com/css?family=Roboto:300');
-  @import "bootstrap/dist/css/bootstrap.min.css";
+  @import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 
   html, body {
     height: auto;
