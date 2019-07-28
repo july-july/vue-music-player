@@ -3,7 +3,7 @@
     <div class="blur" :style="{backgroundImage:  'url('+ tracks[currentPlay].album.image + ')'}"></div>
     <div class="player-inner">
       <song-info :tracks="tracks"/>
-      <timeline :tracks="tracks"  :start="startTime"  @seek="seek"/>
+      <timeline :tracks="tracks" :start="startTime" @seek="seek"/>
       <controls :timer="timer"
                 :tracks="tracks"
                 :next="next"
@@ -12,19 +12,22 @@
                 @play="play"
                 :sound="soundState"
       />
-              <volume/>
-    </div>
+      <div class="d-flex justify-content-between align-items-center">
+        <volume/>
+        <options/>
+      </div>
 
+    </div>
     <!--<button @click="playlist = !playlist" type="button" class="playlist"><i class="fa fa-bars"></i></button>-->
-<!--    <div class="row align-items-center height-100 position-relative " style="z-index: 2">-->
-<!--      <div class="col-xl-6 d-flex align-items-center">-->
-<!--
-     </div>-->
-<!--      <div class="col-xl-2 offset-2 d-flex justify-content-between align-items-center">-->
-<!--        <volume/>-->
-<!--        <options/>-->
-<!--      </div>-->
-<!--    </div>-->
+    <!--    <div class="row align-items-center height-100 position-relative " style="z-index: 2">-->
+    <!--      <div class="col-xl-6 d-flex align-items-center">-->
+    <!--
+         </div>-->
+    <!--      <div class="col-xl-2 offset-2 d-flex justify-content-between align-items-center">-->
+    <!--        <volume/>-->
+    <!--        <options/>-->
+    <!--      </div>-->
+    <!--    </div>-->
 
     <!--<user-playlist-->
     <!--:class="{playlist_active : playlist===true}"-->
@@ -33,7 +36,7 @@
     <!--@play="play"-->
     <!--:sound="sound"-->
     <!--&gt;</user-playlist>-->
-    <youtube class="d-none" ref="youtube" :video-id="tracks[currentPlay].youtubeId" v></youtube>
+    <youtube class="player-iframe" ref="youtube" :video-id="tracks[currentPlay].youtubeId" v></youtube>
 
   </div>
 </template>
@@ -59,6 +62,14 @@
       Controls,
       Options
     },
+    data() {
+      return {
+        tracks: music,
+        playlist: false,
+        startTime: 0,
+        time: '',
+      }
+    },
     computed: {
       player () {
         return this.$refs.youtube.player
@@ -70,15 +81,7 @@
         return this.$store.state.sound
       },
     },
-    data() {
-      return {
-//        repeatOne: false,
-        tracks: music,
-        playlist: false,
-        startTime: 0,
-        time: '',
-      }
-    },
+
     // methods: {
     //   changeCurrentPlay(val) {
     //     this.currentPlay = val
@@ -91,55 +94,47 @@
           this.player.getCurrentTime().then((res) => {
             this.startTime = Math.floor(res)
           })
-
-          if (this.startTime === this.tracks[this.currentPlay].duration) {
-            this.next();
-          }
-          if (this.startTime === this.tracks[this.currentPlay].duration ) {
-            this.startTime = 0;
-            this.player.seekTo(0, true);
-
-          }
-          if (this.startTime === this.tracks[this.currentPlay].duration || this.soundState === false) {
-            window.clearInterval(this.time)
-            console.log('stop')
-          }
         }, 1000);
 
       },
       next() {
-        if (this.currentPlay === this.tracks.length - 1) {
+          const random = this.$store.state.random;
+        if (this.currentPlay === this.tracks.length - 1 && !random) {
           this.$store.commit('changeTrack', 0)
-          window.clearInterval(this.time)
         }
         else {
-          console.log(this.tracks.length - 1, this.currentPlay);
-          this.$store.commit('changeTrack', this.currentPlay + 1)
-          window.clearInterval(this.time)
-          // this.disable = true
+          if (random) {
+            const randomNumber = Math.floor(Math.random() * this.tracks.length)
+            console.log(randomNumber, 'random')
+            this.$store.commit('changeTrack', randomNumber)
+
+          } else {
+            this.$store.commit('changeTrack', this.currentPlay + 1)
+          }
         }
         this.$store.commit('changeSound', false)
-        this.timer();
-        this.startTime = 0;
         setTimeout(() => {
-          // this.disable = false
           this.play()
         }, 1000)
       },
       previous() {
-        if (this.currentPlay === 0) {
+        const random = this.$store.state.random;
+        if (this.currentPlay === 0 && !random) {
           this.$store.commit('changeTrack', this.tracks.length - 1)
         }
         else {
-          this.$store.commit('changeTrack', this.currentPlay - 1)
+          if (random) {
+            const randomNumber = Math.floor(Math.random() * this.tracks.length)
+            console.log(randomNumber, 'random')
+            this.$store.commit('changeTrack', randomNumber)
+          } else {
+            this.$store.commit('changeTrack', this.currentPlay - 1)
+          }
+
         }
         this.$store.commit('changeSound', false)
-        this.disable = true
-        window.clearInterval(this.time)
         setTimeout(() => {
-          this.startTime = 0
           this.play();
-          this.disable = false
         }, 1000)
       },
       seek(a, y) {
@@ -150,12 +145,26 @@
       },
       pause() {
         this.player.pauseVideo();
+        this.$store.commit('changeSound', false)
       },
       play() {
         this.player.playVideo();
         this.timer();
+        this.$store.commit('changeSound', true)
 
       },
     },
+    watch: {
+      startTime(val) {
+        const endTrack = this.tracks[this.currentPlay].duration;
+        const repeatOne = this.$store.state.repeatOne;
+        if (repeatOne && (val === endTrack)) {
+          this.seek(0, true)
+        } else if (!repeatOne && (val === endTrack)) {
+          this.next();
+        }
+
+      }
+    }
   }
 </script>

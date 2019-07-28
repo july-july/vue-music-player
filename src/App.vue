@@ -30,7 +30,7 @@
 
   button, a {
     font-family: 'Roboto', sans-serif;
-    background-image: linear-gradient(to right, #de13bb, #c60eb1, #af08a6, #98049a, #82008e);
+    /*background-image: linear-gradient(to right, #de13bb, #c60eb1, #af08a6, #98049a, #82008e);*/
     padding: 5px 10px;
     color: white;
     border-radius: 20px;
@@ -38,7 +38,7 @@
     &:hover {
       text-decoration: none;
       color: white;
-      background-image: linear-gradient(to right, #82008e, #98049a, #af08a6, #c60eb1, #de13bb);
+      /*background-image: linear-gradient(to right, #82008e, #98049a, #af08a6, #c60eb1, #de13bb);*/
     }
 
     &:focus {

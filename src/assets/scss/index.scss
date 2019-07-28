@@ -49,14 +49,15 @@
     background: transparent;
     border: none;
     i {
-      /*background: -moz-linear-gradient(right, #de13bb, #c60eb1, #af08a6, #98049a, #82008e);*/
-      /*background: -webkit-linear-gradient(right, #de13bb, #c60eb1, #af08a6, #98049a, #82008e);*/
-      /*background: linear-gradient(to right, #de13bb, #c60eb1, #af08a6, #98049a, #82008e);*/
-      /*-webkit-background-clip: text;*/
-      /*-moz-background-clip: text;*/
-      /*background-clip: text;*/
-      /*-webkit-text-fill-color: transparent;*/
       color: #fff;
     }
   }
+}
+.player-iframe {
+  position: absolute;
+  opacity: 0;
+  z-index: -11111;
+}
+.filter-white {
+  filter:brightness(14.5);
 }

@@ -3,10 +3,11 @@ import Vuex from 'vuex';
 
 Vue.use(Vuex);
 const state = {
-  currentTrack: 7,
+  currentTrack: 17,
   repeatOne: false,
   sound: false,
-  startTime: 0
+  startTime: 0,
+  random: false
 
 }
 const mutations = {
@@ -21,6 +22,9 @@ const mutations = {
   },
   changeStartTime (state, payload) {
     state.startTime = payload
+  },
+  randomOn (state) {
+    state.random = !state.random
   }
 }
 const getters = {
